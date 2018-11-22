@@ -14,13 +14,15 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     @IBOutlet var penguinoBaseY: NSLayoutConstraint!
     @IBOutlet var penguinoBaseX: NSLayoutConstraint!
 
-    var velocityX: CGFloat = 6.0
+    var velocityX: CGFloat = 10.0
     var velocityY: CGFloat = 0.0
     
-    var gravity: CGFloat = 1
-    var deceleration: CGFloat = 0.98
+    var gravity: CGFloat = 1.5
+    var deceleration: CGFloat = 0.96
     
     var minY: CGFloat = 25.0
+    
+    var dPadDeadZone: CGFloat = 20.0
     
     @IBOutlet var aButton: UIImageView!
     @IBOutlet var bButton: UIImageView!
@@ -30,29 +32,21 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         start()
     }
 
+    public func addGesture(view: UIView, action: Selector?, delegate: UIGestureRecognizerDelegate) {
+        let gest = UILongPressGestureRecognizer(target: self, action: action)
+        gest.delegate = delegate
+        gest.minimumPressDuration = 0
+        view.isUserInteractionEnabled = true
+        view.addGestureRecognizer(gest)
+    }
+    
     func start(){
-        
-        let aTap = UILongPressGestureRecognizer(target: self, action: #selector(ViewController.aTapped(_:)))
-        aTap.delegate = self
-        aTap.minimumPressDuration = 0
-        aButton.isUserInteractionEnabled = true
-        aButton.addGestureRecognizer(aTap)
-        
-        let bTap = UILongPressGestureRecognizer(target: self, action: #selector(ViewController.bTapped(_:)))
-        bTap.delegate = self
-        bTap.minimumPressDuration = 0
-        bButton.isUserInteractionEnabled = true
-        bButton.addGestureRecognizer(bTap)
-        
-        let dPadTap = UILongPressGestureRecognizer(target: self, action: #selector(ViewController.dPadTouched(_:)))
-        dPadTap.delegate = self
-        dPadTap.minimumPressDuration = 0
-        dPad.isUserInteractionEnabled = true
-        dPad.addGestureRecognizer(dPadTap)
+        addGesture(view: aButton, action: #selector(ViewController.aTapped(_:)), delegate: self)
+        addGesture(view: bButton, action: #selector(ViewController.bTapped(_:)), delegate: self)
+        addGesture(view: dPad, action: #selector(ViewController.dPadTouched(_:)), delegate: self)
 
         Timer.scheduledTimer(timeInterval: 0.0166666, target: self, selector: #selector(ViewController.update), userInfo: nil, repeats: true)
     }
@@ -65,32 +59,26 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         
         //Y
         var newY = penguinoBaseY.constant
-        
         velocityY = velocityY - gravity
-        
         newY = max(newY + velocityY, minY)
-
         if (newY <= minY) {
             velocityY = 0
         }
-        
         penguinoBaseY.constant = newY
 
         //X
         var newX = penguinoBaseX.constant
-
         if newX > view.frame.size.width {
             newX = -50
         }else if newX < -50 {
             newX = view.frame.size.width
         }
-        
         newX = newX + velocityX
-        
-        if (abs(velocityX) > 0) {
-            velocityX = velocityX * deceleration
+        if (newY <= minY) {
+            if (abs(velocityX) > 0) {
+                velocityX = velocityX * deceleration
+            }
         }
-        
         penguinoBaseX.constant = newX
 
     }
@@ -100,18 +88,33 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     func moveLeft(){
+        print("moveLeft")
         velocityX = max(velocityX - 1, -15)
     }
     
     func moveRight(){
+        print("moveRight")
         velocityX = min(velocityX + 1, 15)
     }
     
+    func moveUp(){
+        print("moveUp")
+    }
+    
+    func moveDown(){
+        print("moveDown")
+    }
+    
     func calcMove(_ location : CGPoint){
-        if (location.x < self.dPad.frame.size.width/2){
+        if (location.x < self.dPad.frame.size.width/2 - dPadDeadZone){
             moveLeft()
-        }else{
+        }else if (location.x > self.dPad.frame.size.width/2 + dPadDeadZone){
             moveRight()
+        }
+        if (location.y < self.dPad.frame.size.height/2 - dPadDeadZone){
+            moveUp()
+        }else if (location.y > self.dPad.frame.size.height/2 + dPadDeadZone){
+            moveDown()
         }
     }
     
