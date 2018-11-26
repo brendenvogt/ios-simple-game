@@ -18,7 +18,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="736" height="414"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ice" translatesAutoresizingMaskIntoConstraints="NO" id="oRg-SI-1DZ">
+                            <imageView userInteractionEnabled="NO" contentMode="bottom" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="SnowAndIce" translatesAutoresizingMaskIntoConstraints="NO" id="oRg-SI-1DZ">
                                 <rect key="frame" x="0.0" y="0.0" width="736" height="414"/>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="penguino" translatesAutoresizingMaskIntoConstraints="NO" id="kmP-Wj-LEu">
@@ -85,9 +85,9 @@
         </scene>
     </scenes>
     <resources>
+        <image name="SnowAndIce" width="800" height="600"/>
         <image name="button2" width="240" height="240"/>
         <image name="dpad3" width="2000" height="2000"/>
-        <image name="ice" width="450" height="300"/>
         <image name="penguino" width="194" height="292"/>
     </resources>
 </document>

@@ -51,12 +51,13 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         Timer.scheduledTimer(timeInterval: 0.0166666, target: self, selector: #selector(ViewController.update), userInfo: nil, repeats: true)
     }
     
+    
     @objc func update() {
         
         if let dPadLocation = dPadLocation {
             calcMove(dPadLocation)
         }
-        
+    
         //Y
         var newY = penguinoBaseY.constant
         velocityY = velocityY - gravity
@@ -68,19 +69,23 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
 
         //X
         var newX = penguinoBaseX.constant
+        
+        //
         if newX > view.frame.size.width {
             newX = -50
         }else if newX < -50 {
             newX = view.frame.size.width
         }
+        
+        //
         newX = newX + velocityX
         if (newY <= minY) {
             if (abs(velocityX) > 0) {
                 velocityX = velocityX * deceleration
             }
         }
+        
         penguinoBaseX.constant = newX
-
     }
     
     func jump(){
